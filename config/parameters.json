@@ -1,0 +1,13 @@
+{
+    "image_path": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/imaginiTest/adams.jpg",
+    "grayscale": "True",
+    "small_images_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/colectie/",
+    "small_images_type": "png",
+    "num_pieces_horizontal": 100,
+    "show_small_images": "False",
+    "layout": "caroiaj",
+    "criterion": "euclid",
+    "hexagon": "False",
+    "results_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/results/",
+    "add_checkpoint_perc": 0.25
+}
