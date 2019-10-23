@@ -8,7 +8,7 @@ if __name__ == "__main__":
     mosaic_builder = MosaicBuilder(parameters)
 
     if parameters.layout == "caroiaj":
-        if parameters.criterion == "aleator":
+        if parameters.layout == "aleator":
             pass
         else:
             mosaic_builder.build_grid()

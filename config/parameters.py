@@ -16,6 +16,7 @@ class Parameters:
             self.num_pieces_horizontal = config_dict["num_pieces_horizontal"]
             self.show_small_images = config_dict["show_small_images"] == "True"
             self.layout = config_dict["layout"]
+            self.different = config_dict["different"] == "True"
             self.criterion = config_dict["criterion"]
             self.hexagon = config_dict["hexagon"]
             self.results_dir = config_dict["results_dir"]
