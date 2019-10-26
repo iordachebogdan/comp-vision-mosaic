@@ -1,8 +1,10 @@
 {
-    "image_path": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/imaginiTest/ferrari.jpeg",
-    "grayscale": "False",
-    "small_images_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/colectie/",
+    "image_path": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/imaginiTest/adams.jpg",
+    "grayscale": "True",
+    "small_images_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/cifar/",
     "small_images_type": "png",
+    "cifar": "True",
+    "cifar_type": "horse",
     "num_pieces_horizontal": 100,
     "show_small_images": "False",
     "layout": "caroiaj",

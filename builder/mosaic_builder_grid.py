@@ -1,13 +1,15 @@
 import numpy as np
 from config.parameters import Parameters
 import random
-from util import Progress
+from util.progress import Progress
+from sklearn.neighbors import KDTree
 
 
 class MosaicBuilderGrid:
     def __init__(self, parameters: Parameters):
         self.parameters = parameters
         self.means = self.__compute_means()
+        self.kdtree = KDTree(self.means)
 
     def build_grid(self):
         print("Start building grid ...")
@@ -60,29 +62,27 @@ class MosaicBuilderGrid:
                 progress.update(percentage, result)
         progress.update(1, result)
 
-    def __compute_means(self):
-        return [np.mean(image, axis=(0, 1)) for image in self.parameters.small_images]
+    def __compute_means(self) -> np.ndarray:
+        return np.array(
+            [
+                np.ravel([np.mean(image, axis=(0, 1))])
+                for image in self.parameters.small_images
+            ]
+        )
 
     def __choose_euclid(
         self, i: int, j: int, mean_fragment: np.ndarray, used_images: np.ndarray
     ) -> np.ndarray:
-        best = -1
-        best_mean = np.zeros(3)
+        _, ind = self.kdtree.query([np.ravel([mean_fragment])], k=5)
 
-        for idx in range(0, len(self.means)):
-            curr_mean = self.means[idx]
-            if best == -1 or np.linalg.norm(mean_fragment - curr_mean) < np.linalg.norm(
-                mean_fragment - best_mean
-            ):
-                if self.parameters.different and i > 0 and used_images[i - 1, j] == idx:
-                    continue
-                if self.parameters.different and j > 0 and used_images[i, j - 1] == idx:
-                    continue
-                best = idx
-                best_mean = curr_mean
-
-        used_images[i, j] = best
-        return self.parameters.small_images[best]
+        for idx in ind[0]:
+            if self.parameters.different and i > 0 and used_images[i - 1, j] == idx:
+                continue
+            if self.parameters.different and j > 0 and used_images[i, j - 1] == idx:
+                continue
+            used_images[i, j] = idx
+            return self.parameters.small_images[idx]
+        return None
 
     def __choose_random(self) -> np.ndarray:
         return self.parameters.small_images[

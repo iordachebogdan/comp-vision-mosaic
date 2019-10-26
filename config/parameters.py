@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import glob
 import numpy as np
 import cv2 as cv
+from util.cifar_business import CifarBusiness
 
 
 class Parameters:
@@ -13,6 +14,7 @@ class Parameters:
             self.grayscale = config_dict["grayscale"] == "True"
             self.small_images_dir = config_dict["small_images_dir"]
             self.small_images_type = config_dict["small_images_type"]
+            self.cifar = config_dict["cifar"] == "True"
             self.num_pieces_horizontal = config_dict["num_pieces_horizontal"]
             self.show_small_images = config_dict["show_small_images"] == "True"
             self.layout = config_dict["layout"]
@@ -26,14 +28,20 @@ class Parameters:
                 self.image_path,
                 cv.IMREAD_GRAYSCALE if self.grayscale else cv.IMREAD_COLOR,
             )
-            self.small_images = [
-                cv.imread(
-                    img, cv.IMREAD_GRAYSCALE if self.grayscale else cv.IMREAD_COLOR
-                )
-                for img in glob.glob(
-                    self.small_images_dir + "*." + self.small_images_type
-                )
-            ]
+            if not self.cifar:
+                self.small_images = [
+                    cv.imread(
+                        img, cv.IMREAD_GRAYSCALE if self.grayscale else cv.IMREAD_COLOR
+                    )
+                    for img in glob.glob(
+                        self.small_images_dir + "*." + self.small_images_type
+                    )
+                ]
+            else:
+                self.cifar_type = config_dict["cifar_type"]
+                cifar_business = CifarBusiness(self.small_images_dir, self.grayscale)
+                self.small_images = cifar_business.read_images(self.cifar_type)
+
             self.__compute_dimensions()
             if self.show_small_images:
                 self.__print_small_images()
