@@ -1,11 +1,10 @@
-import cv2 as cv
-import sys
 import numpy as np
 from config.parameters import Parameters
 import random
+from util import Progress
 
 
-class MosaicBuilder:
+class MosaicBuilderGrid:
     def __init__(self, parameters: Parameters):
         self.parameters = parameters
         self.means = self.__compute_means()
@@ -13,8 +12,7 @@ class MosaicBuilder:
     def build_grid(self):
         print("Start building grid ...")
         # afisam imagini intermediare
-        add_checkpoint = self.parameters.add_checkpoint_perc
-        next_checkpoint = self.parameters.add_checkpoint_perc
+        progress = Progress(self.parameters.add_checkpoint_perc, self.parameters)
         result = np.full(self.parameters.image.shape, 255, np.uint8)
         used_images = np.full(
             (
@@ -59,26 +57,8 @@ class MosaicBuilder:
                     self.parameters.num_pieces_horizontal
                     * self.parameters.num_pieces_vertical
                 )
-                sys.stdout.write("\r")
-                sys.stdout.write("Progress: %d%%" % (int(percentage * 100)))
-                sys.stdout.flush()
-                if percentage >= next_checkpoint:
-                    next_checkpoint = min(next_checkpoint + add_checkpoint, 1)
-                    cv.imwrite(
-                        self.parameters.results_dir
-                        + str(int(100 * percentage))
-                        + "."
-                        + self.parameters.small_images_type,
-                        result,
-                    )
-
-        sys.stdout.write("\n")
-        print("Writing solution ...")
-        cv.imwrite(
-            self.parameters.results_dir + "result." + self.parameters.small_images_type,
-            result,
-        )
-        print("Done!")
+                progress.update(percentage, result)
+        progress.update(1, result)
 
     def __compute_means(self):
         return [np.mean(image, axis=(0, 1)) for image in self.parameters.small_images]

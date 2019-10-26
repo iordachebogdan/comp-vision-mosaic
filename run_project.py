@@ -1,14 +1,11 @@
 from config.parameters import Parameters
-from builder.mosaic_builder import MosaicBuilder
+from builder import MosaicBuilderGrid
 
 
 if __name__ == "__main__":
     print("Configuring script and reading images ...")
     parameters = Parameters()
-    mosaic_builder = MosaicBuilder(parameters)
+    mosaic_builder = MosaicBuilderGrid(parameters)
 
     if parameters.layout == "caroiaj":
-        if parameters.layout == "aleator":
-            pass
-        else:
-            mosaic_builder.build_grid()
+        mosaic_builder.build_grid()
