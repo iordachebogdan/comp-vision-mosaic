@@ -15,7 +15,7 @@ class MosaicBuilderGrid:
         print("Start building grid ...")
         # afisam imagini intermediare
         progress = Progress(self.parameters.add_checkpoint_perc, self.parameters)
-        result = np.full(self.parameters.image.shape, 255, np.uint8)
+        result = np.zeros(self.parameters.image.shape, dtype=np.uint8)
         used_images = np.full(
             (
                 self.parameters.num_pieces_vertical,

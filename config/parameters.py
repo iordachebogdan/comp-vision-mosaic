@@ -23,7 +23,7 @@ class Parameters:
                 self.different = config_dict["different"] == "True"
             self.criterion = config_dict["criterion"]
             if self.layout == "caroiaj":
-                self.hexagon = config_dict["hexagon"]
+                self.hexagon = config_dict["hexagon"] == "True"
             self.results_dir = config_dict["results_dir"]
             self.add_checkpoint_perc = config_dict["add_checkpoint_perc"]
 
@@ -54,7 +54,7 @@ class Parameters:
     def __compute_dimensions(self):
         self.height_small = self.small_images[0].shape[0]
         self.width_small = self.small_images[0].shape[1]
-        if self.layout == "caroiaj" and self.hexagon == "True":
+        if self.layout == "caroiaj" and self.hexagon:
             # in cazul in care acoperim cu hexagoane vom considera num_pieces_horizontal
             # ca fiind numarul de coloane de hexagoane pe care le vom avea
             self.width = (
