@@ -2,6 +2,7 @@ import json
 import matplotlib.pyplot as plt
 import glob
 import numpy as np
+import os
 import cv2 as cv
 from util.cifar_business import CifarBusiness
 
@@ -18,9 +19,11 @@ class Parameters:
             self.num_pieces_horizontal = config_dict["num_pieces_horizontal"]
             self.show_small_images = config_dict["show_small_images"] == "True"
             self.layout = config_dict["layout"]
-            self.different = config_dict["different"] == "True"
+            if self.layout != "aleator":
+                self.different = config_dict["different"] == "True"
             self.criterion = config_dict["criterion"]
-            self.hexagon = config_dict["hexagon"]
+            if self.layout == "caroiaj":
+                self.hexagon = config_dict["hexagon"]
             self.results_dir = config_dict["results_dir"]
             self.add_checkpoint_perc = config_dict["add_checkpoint_perc"]
 
@@ -34,7 +37,9 @@ class Parameters:
                         img, cv.IMREAD_GRAYSCALE if self.grayscale else cv.IMREAD_COLOR
                     )
                     for img in glob.glob(
-                        self.small_images_dir + "*." + self.small_images_type
+                        os.path.join(
+                            self.small_images_dir, "*." + self.small_images_type
+                        )
                     )
                 ]
             else:
@@ -47,17 +52,30 @@ class Parameters:
                 self.__print_small_images()
 
     def __compute_dimensions(self):
-        self.num_pieces_vertical = int(
-            np.ceil(
-                (self.image.shape[0] / self.image.shape[1])
-                * (self.small_images[0].shape[1] / self.small_images[0].shape[0])
-                * self.num_pieces_horizontal
-            )
-        )
         self.height_small = self.small_images[0].shape[0]
         self.width_small = self.small_images[0].shape[1]
-        self.height = self.num_pieces_vertical * self.height_small
-        self.width = self.num_pieces_horizontal * self.width_small
+        if self.layout == "caroiaj" and self.hexagon == "True":
+            # in cazul in care acoperim cu hexagoane vom considera num_pieces_horizontal
+            # ca fiind numarul de coloane de hexagoane pe care le vom avea
+            self.width = (
+                self.width_small
+                + (self.num_pieces_horizontal - 1) * self.width_small * 3 // 4
+            )
+            self.height = int(
+                np.ceil((self.image.shape[0] / self.image.shape[1]) * self.width)
+            )
+            self.height -= self.height % self.height_small
+            self.num_pieces_vertical = self.height // self.height_small
+        else:
+            self.num_pieces_vertical = int(
+                np.ceil(
+                    (self.image.shape[0] / self.image.shape[1])
+                    * (self.small_images[0].shape[1] / self.small_images[0].shape[0])
+                    * self.num_pieces_horizontal
+                )
+            )
+            self.height = self.num_pieces_vertical * self.height_small
+            self.width = self.num_pieces_horizontal * self.width_small
         self.image = cv.resize(self.image, (self.width, self.height))
 
     def __print_small_images(self):

@@ -1,5 +1,5 @@
 from config.parameters import Parameters
-from builder import MosaicBuilderGrid, MosaicBuilderRandom
+from builder import MosaicBuilderGrid, MosaicBuilderRandom, MosaicBuilderHexagon
 
 
 if __name__ == "__main__":
@@ -7,8 +7,12 @@ if __name__ == "__main__":
     parameters = Parameters()
 
     if parameters.layout == "caroiaj":
-        mosaic_builder = MosaicBuilderGrid(parameters)
-        mosaic_builder.build_grid()
+        if parameters.hexagon:
+            mosaic_builder = MosaicBuilderHexagon(parameters)
+            mosaic_builder.build_hexagon_grid()
+        else:
+            mosaic_builder = MosaicBuilderGrid(parameters)
+            mosaic_builder.build_grid()
     elif parameters.layout == "aleator":
         mosaic_builder = MosaicBuilderRandom(parameters)
         mosaic_builder.build_random()

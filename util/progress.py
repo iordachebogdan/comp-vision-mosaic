@@ -2,6 +2,7 @@ import numpy as np
 from config.parameters import Parameters
 import sys
 import cv2 as cv
+import os
 
 
 class Progress:
@@ -17,18 +18,21 @@ class Progress:
         if percentage == 1:
             sys.stdout.write("\nWriting solution ...\n")
             cv.imwrite(
-                self.parameters.results_dir
-                + "result."
-                + self.parameters.small_images_type,
+                os.path.join(
+                    self.parameters.results_dir,
+                    "result." + self.parameters.small_images_type,
+                ),
                 image,
             )
             sys.stdout.write("Done!\n")
         elif percentage >= self.next_checkpoint:
             self.next_checkpoint = min(self.next_checkpoint + self.add_checkpoint, 1)
             cv.imwrite(
-                self.parameters.results_dir
-                + str(int(100 * percentage))
-                + "."
-                + self.parameters.small_images_type,
+                os.path.join(
+                    self.parameters.results_dir,
+                    str(int(100 * percentage))
+                    + "."
+                    + self.parameters.small_images_type,
+                ),
                 image,
             )

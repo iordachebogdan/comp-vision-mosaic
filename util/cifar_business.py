@@ -1,3 +1,4 @@
+import os
 import pickle
 import numpy as np
 
@@ -19,7 +20,7 @@ class CifarBusiness:
         self.images = []
         self.type_classes = []
         for i in range(1, 6):
-            file = dir + "data_batch_" + str(i)
+            file = os.path.join(dir, "data_batch_" + str(i))
             with open(file, "rb") as fo:
                 dict = pickle.load(fo, encoding="latin1")
                 images = dict["data"]

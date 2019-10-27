@@ -1,16 +1,16 @@
 {
-    "image_path": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/imaginiTest/adams.jpg",
-    "grayscale": "True",
-    "small_images_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/cifar/",
+    "image_path": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/imaginiTest/romania.jpeg",
+    "grayscale": "False",
+    "small_images_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/cifar",
     "small_images_type": "png",
     "cifar": "True",
-    "cifar_type": "horse",
+    "cifar_type": "bird",
     "num_pieces_horizontal": 100,
     "show_small_images": "False",
     "layout": "caroiaj",
     "different": "True",
     "criterion": "euclid",
-    "hexagon": "False",
-    "results_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/results/",
+    "hexagon": "True",
+    "results_dir": "/mnt/c/Users/Asus/Desktop/CompVis/Tema 1/data/results",
     "add_checkpoint_perc": 0.25
 }
