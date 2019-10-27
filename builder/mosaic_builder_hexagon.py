@@ -110,13 +110,43 @@ class MosaicBuilderHexagon:
             for j in range(w):
                 curr = np.array([i, j])
                 if np.cross(curr - left, top_left - left) < 0:
-                    mask[i, j, ...] = 0
+                    mask[i, j] = 0
                 if np.cross(curr - left, bottom_left - left) > 0:
-                    mask[i, j, ...] = 0
+                    mask[i, j] = 0
                 if np.cross(curr - right, bottom_right - right) < 0:
-                    mask[i, j, ...] = 0
+                    mask[i, j] = 0
                 if np.cross(curr - right, top_right - right) > 0:
-                    mask[i, j, ...] = 0
+                    mask[i, j] = 0
+
+        # adaugam sau stergem pixeli din masca
+        # pentru a ne asigura ca avem imbinare perfecta
+        # top-left ~ bottom-right
+        origin = (
+            -self.parameters.height_small // 2,
+            -self.parameters.width_small * 3 // 4,
+        )
+        for i in range(0, h // 2):
+            for j in range(0, w // 4):
+                if np.all(mask[i, j]) and np.all(mask[i - origin[0], j - origin[1]]):
+                    mask[i, j] = 0
+                elif not np.any(mask[i, j]) and not np.any(
+                    mask[i - origin[0], j - origin[1]]
+                ):
+                    mask[i, j] = 1
+        # bottom-left ~ top-right
+        origin = (
+            self.parameters.height_small // 2,
+            -self.parameters.width_small * 3 // 4,
+        )
+        for i in range(h // 2 + 1, h):
+            for j in range(0, w // 4):
+                if np.all(mask[i, j]) and np.all(mask[i - origin[0], j - origin[1]]):
+                    mask[i, j] = 0
+                elif not np.any(mask[i, j]) and not np.any(
+                    mask[i - origin[0], j - origin[1]]
+                ):
+                    mask[i, j] = 1
+
         return mask
 
     def __compute_means(self) -> np.ndarray:
